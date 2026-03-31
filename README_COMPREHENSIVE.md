@@ -2,7 +2,170 @@
 
 A **complete full-stack application** for running, monitoring, and reporting Playwright automation tests with a modern, responsive web interface.
 
-## 📸 Project Overview
+## 📸 Dashboard Screenshots
+
+### Main Dashboard View
+The dashboard features a clean, modern interface with a sidebar navigation, top toolbar, and main content area:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      QA TEST RUNNER DASHBOARD                          │
+├──────────────┬────────────────────────────────────────────────────────┤
+│ SIDEBAR      │ TOPBAR: Environment Selector | History | Schedule | Run │
+│              │                                                          │
+│ ▶ Run tests  │ ┌──────────────────────────────────────────────────┐   │
+│ ◎ Test       │ │  METRICS ROW (4 Cards)                           │   │
+│ ≡ Scripts    │ │  [248 Total] [231 Passed] [11 Failed] [6 Skipped]│   │
+│              │ └──────────────────────────────────────────────────┘   │
+│ MONITOR      │                                                          │
+│ ⦿ Live status│ ┌──────────────────────────────────────────────────┐   │
+│ ◷ History    │ │ What do you want to run?                          │   │
+│ ⚑ Failures   │ │ [⚡ Functionality] [◎ Selective] [⊞ Full]        │   │
+│              │ │ [↻ Re-run] [⊡ Smoke] [✎ Custom]                 │   │
+│ REPORTS      │ └──────────────────────────────────────────────────┘   │
+│ □ Reports    │                                                          │
+│ ✉ Email      │ ┌──────────────────────────────────────────────────┐   │
+│ ↓ Download   │ │ Run Options                                       │   │
+│              │ │ Module: [All modules ▼]  Env: [Staging ▼]       │   │
+│ SETTINGS     │ │ Mode: [Parallel ▼]     Priority: [All ▼]        │   │
+│ ⊕ Env        │ │ Tags: [tag filter...] Retries: [0 (no retry) ▼] │   │
+│ ⚙ Notif      │ │ Browsers: [🌐 Chrome ✓][🦊 Firefox ✓][...etc]   │   │
+│ 🔗 Integ     │ └──────────────────────────────────────────────────┘   │
+│ 🗓 Schedule   │                                                          │
+│              │ ┌──────────────────────────────────────────────────┐   │
+│ Last run:    │ │ Live run status                                  │   │
+│ 14 min ago   │ │ [▶ 2 running] [⏸ 4 queued] [■ Stop all]         │   │
+│              │ │ ┌────────────────────────────────────────────┐  │   │
+│              │ │ │ Test Case│Module│Browser│Status│Progress  │  │   │
+│              │ │ │ Login... │Auth  │Chrome │▶Run█░░│68%      │  │   │
+│              │ │ │ Add Cart │Chkout│Firefox│▶Run██░░│34%     │  │   │
+│              │ │ │ Password │Auth  │Chrome │⏸Queue│—        │  │   │
+│              │ │ └────────────────────────────────────────────┘  │   │
+│              │ └──────────────────────────────────────────────────┘   │
+│              │                                                          │
+│              │ ┌──────────────────────────────────────────────────┐   │
+│              │ │ Reports                                          │   │
+│              │ │ [✉ Email] [↓ HTML] [↓ CSV] [↓ PDF]             │   │
+│              │ │ ┌────────────────────────────────────────────┐  │   │
+│              │ │ │ Run         │Date │Pass │Fail │Time│Action │  │   │
+│              │ │ │ Regression  │Today│231 │11   │18m │[View] │  │   │
+│              │ │ │ Smoke tests │Yesd │42  │0    │4m  │[View] │  │   │
+│              │ │ └────────────────────────────────────────────┘  │   │
+│              │ └──────────────────────────────────────────────────┘   │
+└──────────────┴────────────────────────────────────────────────────────┘
+```
+
+### UI Features Highlighted
+
+| Feature | Description |
+|---------|-------------|
+| **Sidebar Navigation** | Quick access to Run, Monitor, Reports, Settings sections |
+| **Metrics Cards** | Real-time test statistics (Total, Passed, Failed, Skipped) |
+| **Run Type Selector** | 6 interactive cards for different test modes |
+| **Configuration Panel** | Module, environment, execution mode, browser, retry settings |
+| **Live Status Table** | Real-time test execution with progress bars |
+| **Reports Section** | View past runs and export results |
+| **Color Scheme** | Modern, clean design with green (success), red (failure), blue (running) |
+| **Responsive Design** | Works on desktop, tablet, and mobile |
+
+### Dashboard UI Components
+
+#### 1. **Metrics Dashboard**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  📊 METRICS                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   248              231               11                6       │
+│   Total Tests      ✓ Passed          ✗ Failed         ⊘ Skipped│
+│   ↑ 6 last run    93.1% pass rate   ↑ 3 last run     2 blocked│
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### 2. **Run Type Selector (6 Options)**
+```
+┌────────────┬──────────────────┬─────────────────┐
+│ ⚡          │ ◎                 │ ⊞                │
+│ Functionality │ Selective Regres │ Full Regression │
+│ Run specific   │ Cherry-pick tests│ Complete suite  │
+└────────────┴──────────────────┴─────────────────┘
+
+┌─────────────┬──────────────────┬──────────────────┐
+│ ↻             │ ⊡                 │ ✎                │
+│ Re-run Fail    │ Smoke Tests       │ Custom Selection │
+│ Retry failures │ Quick sanity check│ Manual pick tests│
+└─────────────┴──────────────────┴──────────────────┘
+```
+
+#### 3. **Configuration Options**
+```
+┌─────────────────────────────────────────────────────────┐
+│ Module/Feature: [All modules ▼]  Env: [Staging ▼]     │
+│ Mode: [Parallel ▼]  Priority: [All priorities ▼]       │
+│ Tags: [e.g. smoke, auth, payments]  Retries: [0 ▼]    │
+│ Browsers: [🌐 Chrome ✓][🦊 Firefox ✓][🧭 Safari]      │
+│            [🔷 Edge][📱 Mobile Chrome][📱 Mobile Safari│
+└─────────────────────────────────────────────────────────┘
+```
+
+#### 4. **Live Status Monitoring**
+```
+┌──────────────────────────────────────────────────────────────┐
+│ Live run status     [▶ 2 running] [⏸ 4 queued] [■ Stop all] │
+├──────────────────────────────────────────────────────────────┤
+│ Test Case          │Module   │Browser│Status  │Progress     │
+├────────────────────┼─────────┼───────┼────────┼─────────────┤
+│ Login credentials  │Auth     │Chrome │✓ Pass  │████████░░  │
+│ Add to cart        │Checkout │Firefox│✓ Pass  │███████░░░  │
+│ Password reset     │Auth     │Chrome │⏸Queue  │░░░░░░░░░░  │
+│ Payment with card  │Payments │Edge   │✓ Pass  │████████████│
+│ Search empty query │Search   │Safari │✗ Fail  │████████████│
+└────────────────────┴─────────┴───────┴────────┴─────────────┘
+```
+
+#### 5. **Reports Section**
+```
+┌──────────────────────────────────────────────────────────────┐
+│ Reports    [✉ Email report] [↓ HTML] [↓ CSV] [↓ PDF]       │
+├──────────────────────────────────────────────────────────────┤
+│ Run                         │Date      │Pass │Fail│Time│Action
+├─────────────────────────────┼──────────┼─────┼────┼────┼──────
+│ Full regression — Staging   │Today 10:1│ 231 │ 11 │18m │[View]
+│ Smoke tests — Production    │Yesterday │  42 │  0 │ 4m │[View]
+│ Selective regression — QA   │2 days ago│  88 │  3 │ 9m │[View]
+│ Functionality — Login & Auth│3 days ago│  24 │  1 │ 3m │[View]
+└────────────────────────────┴──────────┴─────┴────┴────┴──────
+```
+
+### Color Scheme & Status Indicators
+
+| Color | Meaning | Usage |
+|-------|---------|-------|
+| 🟢 **Green** (#1a9e6e) | Success/Pass | Passed tests, active buttons, success messages |
+| 🔴 **Red** (#d94444) | Failure/Error | Failed tests, error states, stop buttons |
+| 🔵 **Blue** (#1a62b0) | Running/Process | Running tests, progress indicators |
+| 🟠 **Amber** (#b87016) | Warning/Skipped | Skipped tests, warnings |
+| ⚪ **White** (#ffffff) | Surface/Card | Panel backgrounds, cards |
+| ⬜ **Light Gray** (#f5f5f2) | Background | Main background |
+
+### Design Features
+
+- **Responsive Layout**: Grid-based design, adapts to mobile/tablet/desktop
+- **Interactive Elements**: Hover states, active states, animations
+- **Visual Hierarchy**: Clear typography with font sizes and weights
+- **Accessibility**: Proper contrast ratios, semantic HTML, ARIA labels
+- **Animations**: Smooth transitions, running dot animation, progress bars
+- **Dark Mode Ready**: Uses CSS variables for easy theme switching
+
+#### Responsive Breakpoints
+```css
+Desktop:  Full 2-column layout (sidebar + main)
+Tablet:   1200px - Sidebar hidden on toggle
+Mobile:   580px   - Single column, stacked layouts
+```
+
+## 📸 Project Overview 
 
 The QA Test Runner Dashboard provides:
 - **Interactive Web UI** - Beautiful, responsive dashboard for test management
