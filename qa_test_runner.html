@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Test Runner Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="frontend/css/style.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f5f2;
+    --surface: #ffffff;
+    --surface2: #f0efec;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text2: #5a5a56;
+    --text3: #9a9a94;
+    --green: #1a9e6e;
+    --green-bg: #e2f5ee;
+    --green-text: #0e6649;
+    --red: #d94444;
+    --red-bg: #fceaea;
+    --red-text: #962e2e;
+    --amber: #b87016;
+    --amber-bg: #fdf0da;
+    --amber-text: #7a4a0a;
+    --blue: #1a62b0;
+    --blue-bg: #e4eef9;
+    --blue-text: #134785;
+    --gray-bg: #ebebе7;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+    --sidebar-w: 230px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── Layout ── */
+  .shell {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) 1fr;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-logo {
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 3px var(--green-bg);
+  }
+
+  .nav-section {
+    padding: 14px 16px 5px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 12px;
+    margin: 1px 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text2);
+    transition: background 0.12s, color 0.12s;
+    user-select: none;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--green-bg); color: var(--green-text); font-weight: 500; }
+  .nav-item .ni-icon { font-size: 13px; width: 18px; text-align: center; flex-shrink: 0; }
+
+  .badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-family: var(--mono);
+    background: var(--green);
+    color: #fff;
+    border-radius: 10px;
+    padding: 1px 7px;
+    min-width: 20px;
+    text-align: center;
+    font-weight: 500;
+  }
+  .badge.warn { background: var(--amber); }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  /* ── Main ── */
+  .main { display: flex; flex-direction: column; background: var(--bg); }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .topbar-title { font-size: 15px; font-weight: 600; flex: 1; letter-spacing: -0.01em; }
+
+  .env-sel {
+    font-size: 12px;
+    padding: 6px 11px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    font-family: var(--font);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a5a56' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+    padding-right: 28px;
+  }
+
+  .btn {
+    font-size: 12px;
+    font-family: var(--font);
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s;
+    font-weight: 500;
+  }
+  .btn:hover { background: var(--surface2); }
+  .btn-green { background: var(--green); color: #fff; border-color: var(--green-text); }
+  .btn-green:hover { background: var(--green-text); }
+  .btn-red { background: var(--red); color: #fff; border-color: var(--red-text); }
+  .btn-red:hover { background: var(--red-text); }
+
+  .topbar-divider { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
+
+  /* ── Content ── */
+  .content { padding: 20px 22px; display: flex; flex-direction: column; gap: 18px; }
+
+  /* ── Metrics ── */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .metric {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .metric-val { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+  .metric-val.green { color: var(--green); }
+  .metric-val.red { color: var(--red); }
+  .metric-val.amber { color: var(--amber); }
+  .metric-lbl { font-size: 12px; color: var(--text3); font-family: var(--mono); }
+  .metric-trend { font-size: 11px; color: var(--green); margin-top: 2px; }
+  .metric-trend.neg { color: var(--red); }
+
+  /* ── Panels ── */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Run type cards ── */
+  .run-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .run-card {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+  }
+  .run-card:hover { border-color: var(--border2); background: var(--surface2); }
+  .run-card.selected { border-color: var(--green); background: var(--green-bg); }
+  .run-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 11px;
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  .rc-icon { font-size: 22px; margin-bottom: 8px; }
+  .rc-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .rc-desc { font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+  /* ── Options ── */
+  .opts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .opt-group { display: flex; flex-direction: column; gap: 5px; }
+  .opt-label { font-size: 11px; font-weight: 600; color: var(--text3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  select, input[type="text"] {
+    font-size: 13px;
+    font-family: var(--font);
+    padding: 7px 11px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    width: 100%;
+  }
+  select:focus, input:focus { outline: 2px solid var(--green); outline-offset: 1px; }
+
+  .browser-chips { display: flex; gap: 7px; flex-wrap: wrap; }
+  .chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text2);
+    background: var(--surface2);
+    font-weight: 500;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--green); color: var(--green-text); }
+  .chip.on { border-color: var(--green); color: var(--green-text); background: var(--green-bg); }
+
+  /* ── Status table ── */
+  .status-wrap { overflow-x: auto; }
+  .status-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 680px; }
+  .status-table th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .status-table td {
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: middle;
+  }
+  .status-table tr:last-child td { border-bottom: none; }
+  .status-table tr:hover td { background: var(--surface2); }
+
+  .pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--mono);
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .pill.pass { background: var(--green-bg); color: var(--green-text); }
+  .pill.fail { background: var(--red-bg); color: var(--red-text); }
+  .pill.run { background: var(--blue-bg); color: var(--blue-text); }
+  .pill.queue { background: var(--surface2); color: var(--text3); border: 1px solid var(--border2); }
+  .pill.skip { background: var(--amber-bg); color: var(--amber-text); }
+
+  .prog-wrap { background: var(--surface2); border-radius: 4px; height: 5px; overflow: hidden; min-width: 70px; }
+  .prog-inner { height: 100%; border-radius: 4px; background: var(--green); transition: width 0.3s; }
+  .prog-inner.amber { background: var(--amber); }
+  .prog-inner.red { background: var(--red); }
+  .prog-inner.blue { background: var(--blue); }
+
+  .icon-btn {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    font-family: var(--font);
+    transition: background 0.12s;
+  }
+  .icon-btn:hover { background: var(--surface2); color: var(--text); }
+
+  .tag {
+    font-size: 10px;
+    font-family: var(--mono);
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .tag.running { background: var(--blue-bg); color: var(--blue-text); border-color: transparent; }
+
+  /* ── Reports rows ── */
+  .report-row {
+    display: grid;
+    grid-template-columns: 1fr 100px 50px 50px 60px 120px;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 4px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .report-row:last-child { border-bottom: none; }
+  .report-row:hover { background: var(--surface2); border-radius: var(--radius); }
+  .report-header { font-size: 10px; font-family: var(--mono); color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .rh { display: grid; grid-template-columns: 1fr 100px 50px 50px 60px 120px; gap: 8px; padding: 0 4px 8px; }
+  .report-name { color: var(--text); font-weight: 500; }
+  .report-date { color: var(--text3); font-family: var(--mono); font-size: 11px; }
+  .cnt-pass { color: var(--green); font-family: var(--mono); font-weight: 600; }
+  .cnt-fail { color: var(--red); font-family: var(--mono); font-weight: 600; }
+  .cnt-time { color: var(--text3); font-family: var(--mono); }
+  .row-btns { display: flex; gap: 5px; justify-content: flex-end; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .run-grid { grid-template-columns: 1fr 1fr; }
+    .metrics-row { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 580px) {
+    .run-grid { grid-template-columns: 1fr; }
+    .opts-grid { grid-template-columns: 1fr; }
+    .metrics-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── Animations ── */
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .running-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--blue); animation: pulse 1.4s ease-in-out infinite; vertical-align: middle; margin-right: 4px; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-dot"></div>
+      QA Runner
+    </div>
+    <nav>
+      <div class="nav-section">Run</div>
+      <div class="nav-item active"><span class="ni-icon">▶</span> Run tests</div>
+      <div class="nav-item"><span class="ni-icon">◎</span> Test suites <span class="badge warn">3</span></div>
+      <div class="nav-item"><span class="ni-icon">≡</span> Test scripts</div>
+
+      <div class="nav-section">Monitor</div>
+      <div class="nav-item"><span class="ni-icon">⦿</span> Live status <span class="badge">2</span></div>
+      <div class="nav-item"><span class="ni-icon">◷</span> History</div>
+      <div class="nav-item"><span class="ni-icon">⚑</span> Failures</div>
+
+      <div class="nav-section">Reports</div>
+      <div class="nav-item"><span class="ni-icon">□</span> View reports</div>
+      <div class="nav-item"><span class="ni-icon">✉</span> Email reports</div>
+      <div class="nav-item"><span class="ni-icon">↓</span> Download</div>
+
+      <div class="nav-section">Settings</div>
+      <div class="nav-item"><span class="ni-icon">⊕</span> Environments</div>
+      <div class="nav-item"><span class="ni-icon">⚙</span> Notifications</div>
+      <div class="nav-item"><span class="ni-icon">🔗</span> Integrations</div>
+      <div class="nav-item"><span class="ni-icon">🗓</span> Schedule runs</div>
+    </nav>
+    <div class="sidebar-footer">Last run: 14 min ago</div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">Run tests</div>
+      <select class="env-sel">
+        <option>🔵  Staging</option>
+        <option>🟢  Production</option>
+        <option>🟠  QA</option>
+        <option>⚪  Local</option>
+      </select>
+      <div class="topbar-divider"></div>
+      <button class="btn">◷ History</button>
+      <button class="btn">🗓 Schedule</button>
+      <button class="btn btn-green">▶ Run now</button>
+    </div>
+
+    <div class="content">
+
+      <!-- Metrics -->
+      <div class="metrics-row">
+        <div class="metric">
+          <div class="metric-val">248</div>
+          <div class="metric-lbl">Total tests</div>
+          <div class="metric-trend">↑ 6 from last run</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val green">231</div>
+          <div class="metric-lbl">Passed</div>
+          <div class="metric-trend">93.1% pass rate</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val red">11</div>
+          <div class="metric-lbl">Failed</div>
+          <div class="metric-trend neg">↑ 3 from last run</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val amber">6</div>
+          <div class="metric-lbl">Skipped</div>
+          <div class="metric-trend" style="color:var(--text3)">2 blocked</div>
+        </div>
+      </div>
+
+      <!-- Run type selector -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="section-title">What do you want to run?</div>
+        </div>
+        <div class="run-grid">
+          <div class="run-card selected" onclick="selectRun(this)">
+            <div class="rc-icon">⚡</div>
+            <div class="rc-title">Functionality scripts</div>
+            <div class="rc-desc">Run scripts for a specific feature or module only</div>
+          </div>
+          <div class="run-card" onclick="selectRun(this)">
+            <div class="rc-icon">◎</div>
+            <div class="rc-title">Selective regression</div>
+            <div class="rc-desc">Cherry-pick test cases relevant to recent changes</div>
+          </div>
+          <div class="run-card" onclick="selectRun(this)">
+            <div class="rc-icon">⊞</div>
+            <div class="rc-title">Full regression</div>
+            <div class="rc-desc">Run the complete regression suite across all modules</div>
+          </div>
+          <div class="run-card" onclick="selectRun(this)">
+            <div class="rc-icon">↻</div>
+            <div class="rc-title">Re-run failures</div>
+            <div class="rc-desc">Retry only the test cases that failed in the last run</div>
+          </div>
+          <div class="run-card" onclick="selectRun(this)">
+            <div class="rc-icon">⊡</div>
+            <div class="rc-title">Smoke tests</div>
+            <div class="rc-desc">Quick sanity check — core flows only, fastest run</div>
+          </div>
+          <div class="run-card" onclick="selectRun(this)">
+            <div class="rc-icon">✎</div>
+            <div class="rc-title">Custom selection</div>
+            <div class="rc-desc">Manually pick any combination of test cases</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Run options -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="section-title">Run options</div>
+        </div>
+        <div class="opts-grid" style="margin-bottom:14px">
+          <div class="opt-group">
+            <div class="opt-label">Module / Feature</div>
+            <select>
+              <option>All modules</option>
+              <option>Login &amp; auth</option>
+              <option>Checkout</option>
+              <option>User profile</option>
+              <option>Search</option>
+              <option>Payments</option>
+              <option>Dashboard</option>
+            </select>
+          </div>
+          <div class="opt-group">
+            <div class="opt-label">Environment</div>
+            <select>
+              <option>Staging</option>
+              <option>Production</option>
+              <option>QA</option>
+              <option>Local</option>
+            </select>
+          </div>
+        </div>
+        <div class="opts-grid" style="margin-bottom:14px">
+          <div class="opt-group">
+            <div class="opt-label">Execution mode</div>
+            <select>
+              <option>Parallel</option>
+              <option>Sequential</option>
+            </select>
+          </div>
+          <div class="opt-group">
+            <div class="opt-label">Priority filter</div>
+            <select>
+              <option>All priorities</option>
+              <option>P1 — Critical</option>
+              <option>P2 — High</option>
+              <option>P3 — Medium</option>
+            </select>
+          </div>
+        </div>
+        <div class="opts-grid" style="margin-bottom:14px">
+          <div class="opt-group">
+            <div class="opt-label">Tag / Label</div>
+            <input type="text" placeholder="e.g. smoke, auth, payments">
+          </div>
+          <div class="opt-group">
+            <div class="opt-label">Max retries on fail</div>
+            <select>
+              <option>0 (no retry)</option>
+              <option>1 retry</option>
+              <option>2 retries</option>
+              <option>3 retries</option>
+            </select>
+          </div>
+        </div>
+        <div class="opt-group">
+          <div class="opt-label" style="margin-bottom:7px">Browsers</div>
+          <div class="browser-chips">
+            <div class="chip on" onclick="toggleChip(this)">🌐 Chrome</div>
+            <div class="chip on" onclick="toggleChip(this)">🦊 Firefox</div>
+            <div class="chip" onclick="toggleChip(this)">🧭 Safari</div>
+            <div class="chip" onclick="toggleChip(this)">🔷 Edge</div>
+            <div class="chip" onclick="toggleChip(this)">📱 Mobile Chrome</div>
+            <div class="chip" onclick="toggleChip(this)">📱 Mobile Safari</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live status -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="section-title">
+            <span class="running-dot"></span>Live run status
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="tag running">▶ 2 running</span>
+            <span class="tag">⏸ 4 queued</span>
+            <button class="btn btn-red" style="padding:5px 11px;font-size:11px">■ Stop all</button>
+          </div>
+        </div>
+        <div class="status-wrap">
+          <table class="status-table">
+            <thead>
+              <tr>
+                <th>Test case</th>
+                <th>Module</th>
+                <th>Browser</th>
+                <th>Env</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Duration</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Login with valid credentials</td>
+                <td style="color:var(--text3)">Auth</td>
+                <td style="color:var(--text3)">Chrome</td>
+                <td style="color:var(--text3)">Staging</td>
+                <td><span class="pill run">Running</span></td>
+                <td><div class="prog-wrap"><div class="prog-inner blue" style="width:68%"></div></div></td>
+                <td style="color:var(--text3);font-family:var(--mono)">0:42</td>
+                <td><button class="icon-btn">⏸ Pause</button></td>
+              </tr>
+              <tr>
+                <td>Add to cart — guest user</td>
+                <td style="color:var(--text3)">Checkout</td>
+                <td style="color:var(--text3)">Firefox</td>
+                <td style="color:var(--text3)">Staging</td>
+                <td><span class="pill run">Running</span></td>
+                <td><div class="prog-wrap"><div class="prog-inner blue" style="width:34%"></div></div></td>
+                <td style="color:var(--text3);font-family:var(--mono)">1:12</td>
+                <td><button class="icon-btn">⏸ Pause</button></td>
+              </tr>
+              <tr>
+                <td>Password reset flow</td>
+                <td style="color:var(--text3)">Auth</td>
+                <td style="color:var(--text3)">Chrome</td>
+                <td style="color:var(--text3)">Staging</td>
+                <td><span class="pill queue">Queued</span></td>
+                <td><div class="prog-wrap"><div class="prog-inner" style="width:0%"></div></div></td>
+                <td style="color:var(--text3);font-family:var(--mono)">—</td>
+                <td><button class="icon-btn">✕ Cancel</button></td>
+              </tr>
+              <tr>
+                <td>Payment with saved card</td>
+                <td style="color:var(--text3)">Payments</td>
+                <td style="color:var(--text3)">Edge</td>
+                <td style="color:var(--text3)">QA</td>
+                <td><span class="pill pass">Passed</span></td>
+                <td><div class="prog-wrap"><div class="prog-inner" style="width:100%"></div></div></td>
+                <td style="color:var(--text3);font-family:var(--mono)">2:04</td>
+                <td><button class="icon-btn">↻ Retry</button></td>
+              </tr>
+              <tr>
+                <td>Search with empty query</td>
+                <td style="color:var(--text3)">Search</td>
+                <td style="color:var(--text3)">Safari</td>
+                <td style="color:var(--text3)">Staging</td>
+                <td><span class="pill fail">Failed</span></td>
+                <td><div class="prog-wrap"><div class="prog-inner red" style="width:100%"></div></div></td>
+                <td style="color:var(--text3);font-family:var(--mono)">0:31</td>
+                <td><button class="icon-btn">↻ Retry</button></td>
+              </tr>
+              <tr>
+                <td>User profile update</td>
+                <td style="color:var(--text3)">Profile</td>
+                <td style="color:var(--text3)">Chrome</td>
+                <td style="color:var(--text3)">Staging</td>
+                <td><span class="pill queue">Queued</span></td>
+                <td><div class="prog-wrap"><div class="prog-inner" style="width:0%"></div></div></td>
+                <td style="color:var(--text3);font-family:var(--mono)">—</td>
+                <td><button class="icon-btn">✕ Cancel</button></td>
+              </tr>
+              <tr>
+                <td>Dashboard load time</td>
+                <td style="color:var(--text3)">Dashboard</td>
+                <td style="color:var(--text3)">Firefox</td>
+                <td style="color:var(--text3)">QA</td>
+                <td><span class="pill skip">Skipped</span></td>
+                <td><div class="prog-wrap"><div class="prog-inner amber" style="width:0%"></div></div></td>
+                <td style="color:var(--text3);font-family:var(--mono)">—</td>
+                <td><button class="icon-btn">▶ Run</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Reports -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="section-title">Reports</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn">✉ Email report</button>
+            <button class="btn">↓ HTML</button>
+            <button class="btn">↓ CSV</button>
+            <button class="btn">↓ PDF</button>
+          </div>
+        </div>
+        <div class="rh report-header">
+          <div>Run</div><div>Date</div><div>Pass</div><div>Fail</div><div>Time</div><div></div>
+        </div>
+        <div class="report-row">
+          <div class="report-name">Full regression — Staging</div>
+          <div class="report-date">Today 10:14</div>
+          <div class="cnt-pass">231</div>
+          <div class="cnt-fail">11</div>
+          <div class="cnt-time">18m</div>
+          <div class="row-btns"><button class="icon-btn">View</button><button class="icon-btn">✉</button></div>
+        </div>
+        <div class="report-row">
+          <div class="report-name">Smoke tests — Production</div>
+          <div class="report-date">Yesterday</div>
+          <div class="cnt-pass">42</div>
+          <div class="cnt-fail">0</div>
+          <div class="cnt-time">4m</div>
+          <div class="row-btns"><button class="icon-btn">View</button><button class="icon-btn">✉</button></div>
+        </div>
+        <div class="report-row">
+          <div class="report-name">Selective regression — QA</div>
+          <div class="report-date">2 days ago</div>
+          <div class="cnt-pass">88</div>
+          <div class="cnt-fail">3</div>
+          <div class="cnt-time">9m</div>
+          <div class="row-btns"><button class="icon-btn">View</button><button class="icon-btn">✉</button></div>
+        </div>
+        <div class="report-row">
+          <div class="report-name">Functionality — Login &amp; Auth</div>
+          <div class="report-date">3 days ago</div>
+          <div class="cnt-pass">24</div>
+          <div class="cnt-fail">1</div>
+          <div class="cnt-time">3m</div>
+          <div class="row-btns"><button class="icon-btn">View</button><button class="icon-btn">✉</button></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script src="frontend/js/api.js"></script>
+<script src="frontend/js/dashboard.js"></script>
+</body>
+</html>

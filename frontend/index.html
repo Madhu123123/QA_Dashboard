@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Test Runner Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-dot"></div>
+      QA Runner
+    </div>
+    <nav>
+      <div class="nav-section">Run</div>
+      <div class="nav-item active"><span class="ni-icon">▶</span> Run tests</div>
+      <div class="nav-item"><span class="ni-icon">◎</span> Test suites <span class="badge warn">3</span></div>
+      <div class="nav-item"><span class="ni-icon">≡</span> Test scripts</div>
+
+      <div class="nav-section">Monitor</div>
+      <div class="nav-item"><span class="ni-icon">⦿</span> Live status <span class="badge">2</span></div>
+      <div class="nav-item"><span class="ni-icon">◷</span> History</div>
+      <div class="nav-item"><span class="ni-icon">⚑</span> Failures</div>
+
+      <div class="nav-section">Reports</div>
+      <div class="nav-item"><span class="ni-icon">□</span> View reports</div>
+      <div class="nav-item"><span class="ni-icon">✉</span> Email reports</div>
+      <div class="nav-item"><span class="ni-icon">↓</span> Download</div>
+
+      <div class="nav-section">Settings</div>
+      <div class="nav-item"><span class="ni-icon">⊕</span> Environments</div>
+      <div class="nav-item"><span class="ni-icon">⚙</span> Notifications</div>
+      <div class="nav-item"><span class="ni-icon">🔗</span> Integrations</div>
+      <div class="nav-item"><span class="ni-icon">🗓</span> Schedule runs</div>
+    </nav>
+    <div class="sidebar-footer">Last run: 14 min ago</div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">Run tests</div>
+      <select class="env-sel">
+        <option value="Staging">🔵 Staging</option>
+        <option value="Production">🟢 Production</option>
+        <option value="QA">🟠 QA</option>
+        <option value="Local">⚪ Local</option>
+      </select>
+      <div class="topbar-divider"></div>
+      <button class="btn">◷ History</button>
+      <button class="btn">🗓 Schedule</button>
+      <button class="btn btn-green">▶ Run now</button>
+    </div>
+
+    <div class="content">
+
+      <!-- Metrics -->
+      <div class="metrics-row">
+        <div class="metric">
+          <div class="metric-val">248</div>
+          <div class="metric-lbl">Total tests</div>
+          <div class="metric-trend">↑ 6 from last run</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val green">231</div>
+          <div class="metric-lbl">Passed</div>
+          <div class="metric-trend">93.1% pass rate</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val red">11</div>
+          <div class="metric-lbl">Failed</div>
+          <div class="metric-trend neg">↑ 3 from last run</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val amber">6</div>
+          <div class="metric-lbl">Skipped</div>
+          <div class="metric-trend" style="color:var(--text3)">2 blocked</div>
+        </div>
+      </div>
+
+      <!-- Run type selector -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="section-title">What do you want to run?</div>
+        </div>
+        <div class="run-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Run options -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="section-title">Run options</div>
+        </div>
+        <div class="opts-grid" style="margin-bottom:14px">
+          <div class="opt-group">
+            <div class="opt-label">Module / Feature</div>
+            <select>
+              <option>All modules</option>
+            </select>
+          </div>
+          <div class="opt-group">
+            <div class="opt-label">Environment</div>
+            <select>
+              <option>Staging</option>
+              <option>Production</option>
+              <option>QA</option>
+              <option>Local</option>
+            </select>
+          </div>
+        </div>
+        <div class="opts-grid" style="margin-bottom:14px">
+          <div class="opt-group">
+            <div class="opt-label">Execution mode</div>
+            <select>
+              <option>Parallel</option>
+              <option>Sequential</option>
+            </select>
+          </div>
+          <div class="opt-group">
+            <div class="opt-label">Priority filter</div>
+            <select>
+              <option>All priorities</option>
+              <option>P1 — Critical</option>
+              <option>P2 — High</option>
+              <option>P3 — Medium</option>
+            </select>
+          </div>
+        </div>
+        <div class="opts-grid" style="margin-bottom:14px">
+          <div class="opt-group">
+            <div class="opt-label">Tag / Label</div>
+            <input type="text" placeholder="e.g. smoke, auth, payments">
+          </div>
+          <div class="opt-group">
+            <div class="opt-label">Max retries on fail</div>
+            <select>
+              <option>0 (no retry)</option>
+              <option>1 retry</option>
+              <option>2 retries</option>
+              <option>3 retries</option>
+            </select>
+          </div>
+        </div>
+        <div class="opt-group">
+          <div class="opt-label" style="margin-bottom:7px">Browsers</div>
+          <div class="browser-chips">
+            <div class="chip on">🌐 Chrome</div>
+            <div class="chip on">🦊 Firefox</div>
+            <div class="chip">🧭 Safari</div>
+            <div class="chip">🔷 Edge</div>
+            <div class="chip">📱 Mobile Chrome</div>
+            <div class="chip">📱 Mobile Safari</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live status -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="section-title">
+            <span class="running-dot"></span>Live run status
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="tag running">▶ 0 running</span>
+            <span class="tag">⏸ 0 queued</span>
+            <button class="btn btn-red" style="padding:5px 11px;font-size:11px">■ Stop all</button>
+          </div>
+        </div>
+        <div class="status-wrap">
+          <table class="status-table">
+            <thead>
+              <tr>
+                <th>Test case</th>
+                <th>Module</th>
+                <th>Browser</th>
+                <th>Env</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Duration</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="8" style="text-align:center;padding:20px;color:var(--text3)">No tests running</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Reports -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="section-title">Reports</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn">✉ Email report</button>
+            <button class="btn">↓ HTML</button>
+            <button class="btn">↓ CSV</button>
+            <button class="btn">↓ PDF</button>
+          </div>
+        </div>
+        <div class="rh report-header">
+          <div>Run</div><div>Date</div><div>Pass</div><div>Fail</div><div>Time</div><div></div>
+        </div>
+        <!-- Populated by JavaScript -->
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
