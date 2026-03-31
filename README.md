@@ -304,6 +304,8 @@ const api = new APIClient('http://your-api-url:port');
 2. Deploy to CDN or web server
 3. Update API base URL for production
 
+![alt text](screencapture-file-C-Users-reddym1-Downloads-qa-test-runner-html-2026-03-31-10_55_48.png)
+
 ## License
 
 MIT
